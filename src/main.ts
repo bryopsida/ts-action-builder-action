@@ -46,17 +46,17 @@ async function run(): Promise<void> {
                 },
                 commitErr => {
                   if (commitErr) return core.setFailed(commitErr)
-                  core.info(`Pushing to origin ${process.env.GITHUB_HEAD_REF}`)
-                  core.info('trigger a bump')
-                  // push back to remote
-                  git.push(
-                    'origin',
-                    process.env.GITHUB_HEAD_REF,
-                    {},
-                    pushErr => {
-                      if (pushErr)
-                        return core.setFailed(`Push failed; ${pushErr}`)
-                      core.info('Finished updating build')
+                  git.checkoutBranch(
+                    process.env.GITHUB_HEAD_REF as string,
+                    `origin/${process.env.GITHUB_HEAD_REF}`,
+                    checkoutErr => {
+                      if (checkoutErr) return core.setFailed(checkoutErr)
+                      // push back to remote
+                      git.push(pushErr => {
+                        if (pushErr)
+                          return core.setFailed(`Push failed; ${pushErr}`)
+                        core.info('Finished updating build')
+                      })
                     }
                   )
                 }
