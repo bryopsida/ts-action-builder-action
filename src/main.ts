@@ -46,12 +46,12 @@ async function run(): Promise<void> {
                 },
                 commitErr => {
                   if (commitErr) return core.setFailed(commitErr)
-                  core.info(`Pushing to origin ${process.env.GITHUB_REF_NAME}`)
+                  core.info(`Pushing to origin ${process.env.GITHUB_HEAD_REF}`)
                   core.info('trigger a bump')
                   // push back to remote
                   git.push(
                     'origin',
-                    process.env.GITHUB_REF_NAME,
+                    process.env.GITHUB_HEAD_REF,
                     {},
                     pushErr => {
                       if (pushErr)
