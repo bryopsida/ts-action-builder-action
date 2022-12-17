@@ -54,7 +54,8 @@ async function run(): Promise<void> {
                     process.env.GITHUB_REF_NAME,
                     {},
                     pushErr => {
-                      if (pushErr) return core.setFailed(pushErr)
+                      if (pushErr)
+                        return core.setFailed(`Push failed; ${pushErr}`)
                       core.info('Finished updating build')
                     }
                   )
