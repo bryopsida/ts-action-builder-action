@@ -81,12 +81,19 @@ function run() {
                                 }, commitErr => {
                                     if (commitErr)
                                         return core.setFailed(commitErr);
-                                    core.info(`Pushing to origin ${process.env.GITHUB_REF_NAME}`);
-                                    // push back to remote
-                                    git.push('origin', process.env.GITHUB_REF_NAME, {}, pushErr => {
-                                        if (pushErr)
-                                            return core.setFailed(pushErr);
-                                        core.info('Finished updating build');
+                                    git.fetch(fetchErr => {
+                                        if (fetchErr)
+                                            return core.setFailed(fetchErr);
+                                        git.checkout(process.env.GITHUB_HEAD_REF, checkoutErr => {
+                                            if (checkoutErr)
+                                                return core.setFailed(checkoutErr);
+                                            // push back to remote
+                                            git.push(pushErr => {
+                                                if (pushErr)
+                                                    return core.setFailed(`Push failed; ${pushErr}`);
+                                                core.info('Finished updating build');
+                                            });
+                                        });
                                     });
                                 });
                             });
