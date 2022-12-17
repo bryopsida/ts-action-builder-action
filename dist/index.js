@@ -89,6 +89,7 @@ function run() {
                                     if (commitErr)
                                         return core.setFailed(commitErr);
                                     // push back to remote
+                                    core.info('Pushing to remote');
                                     git.push(pushErr => {
                                         if (pushErr)
                                             return core.setFailed(`Push failed; ${pushErr}`);
