@@ -42,12 +42,14 @@ const child_process_1 = __nccwpck_require__(3129);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            core.info('Running build');
             const buildProc = (0, child_process_1.spawn)('npm', ['run', 'build']);
             buildProc.stdout.pipe(process.stdout);
             buildProc.stderr.pipe(process.stderr);
             buildProc.on('close', code => {
                 if (code !== 0)
                     return core.setFailed('Build failed');
+                core.info('Running package');
                 const packageProc = (0, child_process_1.spawn)('npm', ['run', 'package']);
                 packageProc.stdout.pipe(process.stdout);
                 packageProc.stderr.pipe(process.stderr);
