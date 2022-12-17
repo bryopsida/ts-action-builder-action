@@ -49,7 +49,7 @@ function run() {
             core.info('Fetching remote history');
             yield git.fetch();
             core.info('Checking out branch');
-            yield git.checkout(process.env.GITHUB_HEAD_REF);
+            yield git.checkout((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME));
             core.info('Running install');
             const installProc = (0, child_process_1.spawn)('npm', ['install', '--ignore-scripts']);
             installProc.stdout.pipe(process.stdout);
