@@ -13,8 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           persist-credentials: true
+          
       - run: |
           npm install
       - run: |
@@ -26,6 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           persist-credentials: true
       - uses: ./
@@ -35,7 +38,10 @@ jobs:
      - test
     steps:
       - uses: actions/checkout@v3
-
+        with:
+            ref: ${{ github.event.pull_request.head.sha }}
+            fetch-depth: 0
+            persist-credentials: true
       - name: Set Node.js 16.x
         uses: actions/setup-node@v3.5.1
         with:
