@@ -46,9 +46,8 @@ async function run(): Promise<void> {
                 },
                 commitErr => {
                   if (commitErr) return core.setFailed(commitErr)
-                  git.checkoutBranch(
+                  git.checkout(
                     process.env.GITHUB_HEAD_REF as string,
-                    `origin/${process.env.GITHUB_HEAD_REF}`,
                     checkoutErr => {
                       if (checkoutErr) return core.setFailed(checkoutErr)
                       // push back to remote
