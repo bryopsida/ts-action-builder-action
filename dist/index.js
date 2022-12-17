@@ -63,7 +63,9 @@ function run() {
                     packageProc.on('close', packageCode => {
                         if (packageCode !== 0)
                             return core.setFailed('Package failed');
-                        const git = (0, simple_git_1.simpleGit)();
+                        const git = (0, simple_git_1.simpleGit)()
+                            .addConfig('user.name', 'Action Build-Bot')
+                            .addConfig('user.email', `${process.env.GITHUB_ACTOR}@users.noreply.github.com>`);
                         git.status({}, (err, result) => {
                             if (err)
                                 return core.setFailed(err);
