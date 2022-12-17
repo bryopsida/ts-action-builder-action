@@ -42,6 +42,14 @@ const child_process_1 = __nccwpck_require__(3129);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            // set up git
+            const git = (0, simple_git_1.simpleGit)()
+                .addConfig('user.name', 'Action Build-Bot')
+                .addConfig('user.email', `${process.env.GITHUB_ACTOR}@users.noreply.github.com>`);
+            core.info('Fetching remote history');
+            yield git.fetch();
+            core.info('Checking out branch');
+            yield git.checkout(process.env.GITHUB_HEAD_REF);
             core.info('Running install');
             const installProc = (0, child_process_1.spawn)('npm', ['install', '--ignore-scripts']);
             installProc.stdout.pipe(process.stdout);
@@ -63,9 +71,6 @@ function run() {
                     packageProc.on('close', packageCode => {
                         if (packageCode !== 0)
                             return core.setFailed('Package failed');
-                        const git = (0, simple_git_1.simpleGit)()
-                            .addConfig('user.name', 'Action Build-Bot')
-                            .addConfig('user.email', `${process.env.GITHUB_ACTOR}@users.noreply.github.com>`);
                         git.status({}, (err, result) => {
                             if (err)
                                 return core.setFailed(err);
@@ -73,18 +78,21 @@ function run() {
                                 return;
                             core.info('Detected a build is required');
                             /// stage files
+                            core.info('Staging files');
                             git.add('.', addErr => {
                                 if (addErr)
                                     return core.setFailed(addErr);
+                                core.info('Committing files');
                                 git.commit('Distibution build after dependency update', {
                                     '--author': `Action Build-Bot <${process.env.GITHUB_ACTOR}@users.noreply.github.com>`
                                 }, commitErr => {
                                     if (commitErr)
                                         return core.setFailed(commitErr);
                                     // push back to remote
-                                    git.push('origin', process.env.GITHUB_REF_NAME, {}, pushErr => {
+                                    core.info('Pushing to remote');
+                                    git.push(pushErr => {
                                         if (pushErr)
-                                            return core.setFailed(pushErr);
+                                            return core.setFailed(`Push failed; ${pushErr}`);
                                         core.info('Finished updating build');
                                     });
                                 });

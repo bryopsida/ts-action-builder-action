@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          persist-credentials: true
+          
       - run: |
           npm install
       - run: |
@@ -22,6 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          persist-credentials: true
       - uses: ./
   check-dist:
     runs-on: ubuntu-latest
@@ -29,7 +38,10 @@ jobs:
      - test
     steps:
       - uses: actions/checkout@v3
-
+        with:
+            ref: ${{ github.head_ref }}
+            fetch-depth: 0
+            persist-credentials: true
       - name: Set Node.js 16.x
         uses: actions/setup-node@v3.5.1
         with:
