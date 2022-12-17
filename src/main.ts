@@ -6,10 +6,14 @@ import {spawn} from 'child_process'
 async function run(): Promise<void> {
   try {
     const buildProc = spawn('npm', ['run', 'build'])
+    buildProc.stdout.pipe(process.stdout)
+    buildProc.stderr.pipe(process.stderr)
     buildProc.on('close', code => {
       if (code !== 0) return core.setFailed('Build failed')
 
       const packageProc = spawn('npm', ['run', 'package'])
+      packageProc.stdout.pipe(process.stdout)
+      packageProc.stderr.pipe(process.stderr)
       packageProc.on('close', packageCode => {
         if (packageCode !== 0) return core.setFailed('Package failed')
         const git = simpleGit()

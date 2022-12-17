@@ -43,10 +43,14 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const buildProc = (0, child_process_1.spawn)('npm', ['run', 'build']);
+            buildProc.stdout.pipe(process.stdout);
+            buildProc.stderr.pipe(process.stderr);
             buildProc.on('close', code => {
                 if (code !== 0)
                     return core.setFailed('Build failed');
                 const packageProc = (0, child_process_1.spawn)('npm', ['run', 'package']);
+                packageProc.stdout.pipe(process.stdout);
+                packageProc.stderr.pipe(process.stderr);
                 packageProc.on('close', packageCode => {
                     if (packageCode !== 0)
                         return core.setFailed('Package failed');
