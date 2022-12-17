@@ -15,7 +15,9 @@ async function run(): Promise<void> {
     core.info('Fetching remote history')
     await git.fetch()
     core.info('Checking out branch')
-    await git.checkout(process.env.GITHUB_HEAD_REF as string)
+    await git.checkout(
+      (process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME) as string
+    )
 
     core.info('Running install')
     const installProc = spawn('npm', ['install', '--ignore-scripts'])
