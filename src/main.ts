@@ -46,7 +46,7 @@ async function run(): Promise<void> {
                 },
                 commitErr => {
                   if (commitErr) return core.setFailed(commitErr)
-
+                  core.info(`Pushing to origin ${process.env.GITHUB_REF_NAME}`)
                   // push back to remote
                   git.push(
                     'origin',
