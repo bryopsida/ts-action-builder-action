@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: true
       - run: |
           npm install
       - run: |
@@ -22,6 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: true
       - uses: ./
   check-dist:
     runs-on: ubuntu-latest
