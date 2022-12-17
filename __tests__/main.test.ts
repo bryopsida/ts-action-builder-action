@@ -15,7 +15,7 @@ test('test runs', (done) => {
   actionProc.stdout?.pipe(process.stdout)
   actionProc.stderr?.pipe(process.stderr)
   actionProc.on('close', code => {
-    if (code !== 0) throw new Error(`Action returned code ${code}`)
+    if (code !== 0) done(new Error(`Action returned code ${code}`))
     done()
   })
 })
