@@ -82,7 +82,7 @@ function run() {
                                     if (commitErr)
                                         return core.setFailed(commitErr);
                                     // push back to remote
-                                    git.push(pushErr => {
+                                    git.push('origin', process.env.GITHUB_REF_NAME, {}, pushErr => {
                                         if (pushErr)
                                             return core.setFailed(pushErr);
                                         core.info('Finished updating build');

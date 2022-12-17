@@ -48,10 +48,15 @@ async function run(): Promise<void> {
                   if (commitErr) return core.setFailed(commitErr)
 
                   // push back to remote
-                  git.push(pushErr => {
-                    if (pushErr) return core.setFailed(pushErr)
-                    core.info('Finished updating build')
-                  })
+                  git.push(
+                    'origin',
+                    process.env.GITHUB_REF_NAME,
+                    {},
+                    pushErr => {
+                      if (pushErr) return core.setFailed(pushErr)
+                      core.info('Finished updating build')
+                    }
+                  )
                 }
               )
             })
