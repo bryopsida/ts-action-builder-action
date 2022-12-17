@@ -42,39 +42,47 @@ const child_process_1 = __nccwpck_require__(3129);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            core.info('Running build');
-            const buildProc = (0, child_process_1.spawn)('npm', ['run', 'build']);
-            buildProc.stdout.pipe(process.stdout);
-            buildProc.stderr.pipe(process.stderr);
-            buildProc.on('close', code => {
-                if (code !== 0)
-                    return core.setFailed('Build failed');
-                core.info('Running package');
-                const packageProc = (0, child_process_1.spawn)('npm', ['run', 'package']);
-                packageProc.stdout.pipe(process.stdout);
-                packageProc.stderr.pipe(process.stderr);
-                packageProc.on('close', packageCode => {
-                    if (packageCode !== 0)
-                        return core.setFailed('Package failed');
-                    const git = (0, simple_git_1.simpleGit)();
-                    git.status({}, (err, result) => {
-                        if (err)
-                            return core.setFailed(err);
-                        if (result.isClean())
-                            return;
-                        core.info('Detected a build is required');
-                        /// stage files
-                        git.add('.', addErr => {
-                            if (addErr)
-                                return core.setFailed(addErr);
-                            git.commit('Distibution build after dependency update', commitErr => {
-                                if (commitErr)
-                                    return core.setFailed(commitErr);
-                                // push back to remote
-                                git.push(pushErr => {
-                                    if (pushErr)
-                                        return core.setFailed(pushErr);
-                                    core.info('Finished updating build');
+            core.info('Running install');
+            const installProc = (0, child_process_1.spawn)('npm', ['install', '--ignore-scripts']);
+            installProc.stdout.pipe(process.stdout);
+            installProc.stderr.pipe(process.stderr);
+            installProc.on('close', installCode => {
+                if (installCode !== 0)
+                    return core.setFailed('Install failed');
+                core.info('Running build');
+                const buildProc = (0, child_process_1.spawn)('npm', ['run', 'build']);
+                buildProc.stdout.pipe(process.stdout);
+                buildProc.stderr.pipe(process.stderr);
+                buildProc.on('close', code => {
+                    if (code !== 0)
+                        return core.setFailed('Build failed');
+                    core.info('Running package');
+                    const packageProc = (0, child_process_1.spawn)('npm', ['run', 'package']);
+                    packageProc.stdout.pipe(process.stdout);
+                    packageProc.stderr.pipe(process.stderr);
+                    packageProc.on('close', packageCode => {
+                        if (packageCode !== 0)
+                            return core.setFailed('Package failed');
+                        const git = (0, simple_git_1.simpleGit)();
+                        git.status({}, (err, result) => {
+                            if (err)
+                                return core.setFailed(err);
+                            if (result.isClean())
+                                return;
+                            core.info('Detected a build is required');
+                            /// stage files
+                            git.add('.', addErr => {
+                                if (addErr)
+                                    return core.setFailed(addErr);
+                                git.commit('Distibution build after dependency update', commitErr => {
+                                    if (commitErr)
+                                        return core.setFailed(commitErr);
+                                    // push back to remote
+                                    git.push(pushErr => {
+                                        if (pushErr)
+                                            return core.setFailed(pushErr);
+                                        core.info('Finished updating build');
+                                    });
                                 });
                             });
                         });
