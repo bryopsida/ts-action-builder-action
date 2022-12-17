@@ -24,11 +24,6 @@ async function run(): Promise<void> {
         packageProc.on('close', packageCode => {
           if (packageCode !== 0) return core.setFailed('Package failed')
           const git = simpleGit()
-            .addConfig('user.name', 'TS Action Build Bot')
-            .addConfig(
-              'user.email',
-              `${process.env.GITHUB_ACTOR}@users.noreply.github.com`
-            )
 
           git.status({}, (err, result) => {
             if (err) return core.setFailed(err)
@@ -41,6 +36,9 @@ async function run(): Promise<void> {
 
               git.commit(
                 'Distibution build after dependency update',
+                {
+                  '--author': `Action Build-Bot <${process.env.GITHUB_ACTOR}@users.noreply.github.com>`
+                },
                 commitErr => {
                   if (commitErr) return core.setFailed(commitErr)
 
