@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
           persist-credentials: true
           
@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
           persist-credentials: true
       - uses: ./
@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-            ref: ${{ github.event.pull_request.head.sha }}
+            ref: ${{ github.head_ref }}
             fetch-depth: 0
             persist-credentials: true
       - name: Set Node.js 16.x
