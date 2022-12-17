@@ -27,7 +27,7 @@ async function run(): Promise<void> {
             .addConfig('user.name', 'TS Action Build Bot')
             .addConfig(
               'user.email',
-              '8363252+bryopsida@users.noreply.github.com'
+              `${process.env.GITHUB_ACTOR}@users.noreply.github.com`
             )
 
           git.status({}, (err, result) => {
