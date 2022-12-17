@@ -1,11 +1,6 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
-inputs:
-  milliseconds: # change this
-    required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+name: 'ts-action-builder-action'
+description: 'Builds and packages the action and commits back to branch if there is a change'
+author: 'bryopsida'
 runs:
   using: 'node16'
   main: 'dist/index.js'
