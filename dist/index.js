@@ -88,19 +88,11 @@ function run() {
                                 }, commitErr => {
                                     if (commitErr)
                                         return core.setFailed(commitErr);
-                                    git.fetch(fetchErr => {
-                                        if (fetchErr)
-                                            return core.setFailed(fetchErr);
-                                        git.checkout(process.env.GITHUB_HEAD_REF, checkoutErr => {
-                                            if (checkoutErr)
-                                                return core.setFailed(checkoutErr);
-                                            // push back to remote
-                                            git.push(pushErr => {
-                                                if (pushErr)
-                                                    return core.setFailed(`Push failed; ${pushErr}`);
-                                                core.info('Finished updating build');
-                                            });
-                                        });
+                                    // push back to remote
+                                    git.push(pushErr => {
+                                        if (pushErr)
+                                            return core.setFailed(`Push failed; ${pushErr}`);
+                                        core.info('Finished updating build');
                                     });
                                 });
                             });
