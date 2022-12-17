@@ -36,6 +36,9 @@ async function run(): Promise<void> {
 
               git.commit(
                 'Distibution build after dependency update',
+                {
+                  '--author': `Action Build-Bot <${process.env.GITHUB_ACTOR}@users.noreply.github.com>`
+                },
                 commitErr => {
                   if (commitErr) return core.setFailed(commitErr)
 
