@@ -5,6 +5,18 @@ import {spawn} from 'child_process'
 // TODO refactor to async/await and/or breakup calls, prove it works then clean it up.
 async function run(): Promise<void> {
   try {
+    // set up git
+    const git = simpleGit()
+      .addConfig('user.name', 'Action Build-Bot')
+      .addConfig(
+        'user.email',
+        `${process.env.GITHUB_ACTOR}@users.noreply.github.com>`
+      )
+    core.info('Fetching remote history')
+    await git.fetch()
+    core.info('Checking out branch')
+    await git.checkout(process.env.GITHUB_HEAD_REF as string)
+
     core.info('Running install')
     const installProc = spawn('npm', ['install', '--ignore-scripts'])
     installProc.stdout.pipe(process.stdout)
@@ -23,12 +35,6 @@ async function run(): Promise<void> {
         packageProc.stderr.pipe(process.stderr)
         packageProc.on('close', packageCode => {
           if (packageCode !== 0) return core.setFailed('Package failed')
-          const git = simpleGit()
-            .addConfig('user.name', 'Action Build-Bot')
-            .addConfig(
-              'user.email',
-              `${process.env.GITHUB_ACTOR}@users.noreply.github.com>`
-            )
 
           git.status({}, (err, result) => {
             if (err) return core.setFailed(err)
@@ -36,9 +42,10 @@ async function run(): Promise<void> {
             core.info('Detected a build is required')
 
             /// stage files
+            core.info('Staging files')
             git.add('.', addErr => {
               if (addErr) return core.setFailed(addErr)
-
+              core.info('Committing files')
               git.commit(
                 'Distibution build after dependency update',
                 {
