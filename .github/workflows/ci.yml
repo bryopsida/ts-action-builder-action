@@ -42,7 +42,7 @@ jobs:
             fetch-depth: 0
             persist-credentials: true
       - name: Set Node.js 16.x
-        uses: actions/setup-node@v3.7.0
+        uses: actions/setup-node@v3.8.0
         with:
           node-version: 16.x
 
